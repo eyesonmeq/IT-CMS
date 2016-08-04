@@ -1,0 +1,28 @@
+subprojects {
+    apply plugin: 'eclipse'
+	apply plugin: 'maven'
+	
+	group = "com.angel.it.cms"
+	version = "1.0.0";
+	
+	repositories {
+        mavenCentral()
+        mavenRepo urls: 'http://repo.enonic.com/maven'
+    }
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+versions = [
+ 	junit: '4.8.2',
+ 	servlet : '2.5',
+ 	spring: '3.0.5.RELEASE',
+ 	hibernate: '3.5.6-Final',
+ 	slf4j: '1.6.1',
+  	commons_cli: '1.0',
+    jackrabbit: '2.2.4',
+    saxon: '9.1.0.8'
+]
+
+configure(){}
