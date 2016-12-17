@@ -1,28 +1,54 @@
-subprojects {
-    apply plugin: 'eclipse'
-	apply plugin: 'maven'
+allprojects {
+    apply plugin: 'java-base'
 	
 	group = "com.angel.it.cms"
 	version = "1.0.0";
+	buildNumber = new Date().format("yyyyMMdd.HHmmss")
 	
 	repositories {
         mavenCentral()
         mavenRepo urls: 'http://repo.enonic.com/maven'
+        mavenRepo urls: 'http://repository.jboss.org/nexus/content/groups/public'
     }
+	
+	tasks.withType(JavaCompile) {
+        //I don't believe those warnings add value given modern IDEs
+        options.warnings = false
+        options.encoding = 'UTF-8'
+	}
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+def gradleDir = "$rootDir/gradle"
+apply from: "$gradleDir/wrapper.gradle"
 
 versions = [
- 	junit: '4.8.2',
- 	servlet : '2.5',
- 	spring: '3.0.5.RELEASE',
- 	hibernate: '3.5.6-Final',
- 	slf4j: '1.6.1',
-  	commons_cli: '1.0',
-    jackrabbit: '2.2.4',
-    saxon: '9.1.0.8'
+ 	guava : '20.0',
+	joda-time : '2.9.6',
+	junit : '4.12',
+	hamcrest : '2.0.0.0',
+	mockito : '2.3.5',
+ 	servlet : '3.0.1',
+ 	spring : '4.3.4.RELEASE',
+ 	mybatis : '3.4.1',
+	mybatis-spring : '1.3.0',
+	mysql : '5.1.40',
+	commons-dbcp : '1.4',
+	commons-logging : '1.2',
+ 	log4j : '1.2.17'
 ]
 
-configure(){}
+def javaProjects() {
+    [project(':cms-admin'), project(':cms-commons'), project(':cms-core'), project(':cms-rest'), project(':cms-webapp')]
+}
+
+def publishedProjects() {
+    [project(':cms-admin'), [project(':cms-rest'), project(':cms-webapp'), project(':cms-distro')]
+}
+
+configure(javaProjects()) {
+    apply from: "$gradleDir/java.gradle"
+}
+
+configure(publishedProjects()) {
+    apply from: "$gradleDir/publish.gradle"
+}

@@ -1,3 +1,17 @@
-include "cms-admin", "cms-core", "cms-rest", "cms-web"
+include ':cms-admin'
+include 'cms-common'
+include ':cms-core'
+include ':cms-distro'
+include 'cms-rest'
+include 'cms-webapp'
 
 rootProject.name = 'IT-CMS'
+
+rootProject.children.each {project ->
+ 	String fileBaseName = project.name
+    String projectDirName = "modules/$fileBaseName"
+    project.projectDir = new File(settingsDir, projectDirName)
+    project.buildFileName = "build.gradle"
+    assert project.projectDir.isDirectory()
+    assert project.buildFile.isFile()
+}
